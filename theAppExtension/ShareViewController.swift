@@ -2,16 +2,21 @@ import UIKit
 import SnapKit
 import MobileCoreServices
 
+protocol ShareViewControllerDelegate: class {
+    func finish(afterDelay: TimeInterval)
+    func getValidExtensionContext() -> NSExtensionContext?
+}
+
 class TopShareViewController: UIViewController {
     var separators = [UIView]()
     var actionRows = [UIView]()
     var stackView: UIStackView!
 
-    var validExtensionContext: NSExtensionContext?
+    weak var delegate: ShareViewControllerDelegate?
 
     override var extensionContext: NSExtensionContext? {
         get {
-            return validExtensionContext
+            return delegate?.getValidExtensionContext()
         }
     }
 
@@ -19,7 +24,7 @@ class TopShareViewController: UIViewController {
 
     func makeSeparator() -> UIView {
         let view = UIView()
-        view.backgroundColor = UIColor(white: CGFloat(205.0/255.0), alpha: 1.0)
+        view.backgroundColor = UX.separatorColor
         separators.append(view)
         return view
     }
@@ -86,7 +91,7 @@ class TopShareViewController: UIViewController {
         title.snp.makeConstraints { make in
             make.right.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.left.equalTo(icon.snp.right).offset(8) // space between title and icon
+            make.left.equalTo(icon.snp.right).offset(UX.actionRowSpacingForIconAndTitle) 
         }
 
         if hasNavigation {
@@ -132,15 +137,13 @@ class TopShareViewController: UIViewController {
         })
     }
 
-    @objc func finish() {
-        hideExtensionWithCompletionHandler { (Bool) -> Void in
-            self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
-        }
+    @objc func finish(afterDelay: TimeInterval = 0.8) {
+        delegate?.finish(afterDelay: afterDelay)
     }
 
     func showActionDoneView(withTitle title: String) {
         let blue = UIView()
-        blue.backgroundColor = UIColor(red: 76 / 255.0, green: 158 / 255.0, blue: 1.0, alpha: 1.0)
+        blue.backgroundColor = UX.doneLabelBackgroundColor
         self.stackView.addArrangedSubview(blue)
         blue.snp.makeConstraints { make in
             make.height.equalTo(UX.pageInfoRowHeight)
@@ -170,18 +173,6 @@ class TopShareViewController: UIViewController {
             make.width.equalTo(20)
             //make.width.height.equalTo(22)
         }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            self.finish()
-        }
-    }
-
-    func hideExtensionWithCompletionHandler(completion: @escaping (Bool) -> Void) {
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: [], animations: {
-            self.view.superview?.alpha = 0
-        }, completion: { (finished: Bool) in
-            completion(finished)
-        })
     }
 
     private func setupNavBar() {
@@ -279,7 +270,8 @@ class SubVC : UIViewController {
 extension TopShareViewController {
 
     func actionOpenInFirefox() {
-        animateToActionDoneView(withTitle: "Opening Firefox")
+        //animateToActionDoneView(withTitle: "Opening Firefox")
+        finish(afterDelay: 0.0)
     }
 
     func actionLoadInBackground() {
@@ -290,6 +282,8 @@ extension TopShareViewController {
 //            profile.shutdown()
 //            context.completeRequest(returningItems: [], completionHandler: nil)
 //        }
+
+        finish()
     }
 
     func actionBookmarkThisPage() {
@@ -298,6 +292,8 @@ extension TopShareViewController {
 //        let profile = BrowserProfile(localName: "profile")
 //        _ = profile.bookmarks.shareItem(item).value // Blocks until database has settled
 //        profile.shutdown()
+
+        finish()
     }
 
     func actionAddToReadingList() {
@@ -306,6 +302,8 @@ extension TopShareViewController {
 //        let profile = BrowserProfile(localName: "profile")
 //        profile.readingList.createRecordWithURL(item.url, title: item.title ?? "", addedBy: UIDevice.current.name)
 //        profile.shutdown()
+
+        finish()
     }
 
     func actionSentToDevice() {

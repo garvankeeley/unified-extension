@@ -2,6 +2,12 @@ import UIKit
 import SnapKit
 import MobileCoreServices
 
+/*
+ The initial view controller is full-screen and is the only one with a valid extension context.
+ This view controller is just a wrapper with a semi-transparent background to darken the screen
+ that embeds the share view controller which is designed to look like a popup.
+ */
+
 class EmbeddedNavController {
     weak var parent: UIViewController?
     var controllers = [UIViewController]()
@@ -40,9 +46,23 @@ class InitialViewController: UIViewController {
 
         super.viewDidLoad()
         let firstPage = TopShareViewController()
-        firstPage.validExtensionContext = extensionContext
+        firstPage.delegate = self
         embedController = EmbeddedNavController(parent: self, rootViewController: firstPage)
 
-        view.backgroundColor = UIColor(white: 0.0, alpha: 0.66)
+        view.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+    }
+}
+
+extension InitialViewController: ShareViewControllerDelegate {
+    func finish(afterDelay: TimeInterval) {
+        UIView.animate(withDuration: 0.2, delay: afterDelay, options: [], animations: {
+            self.view.alpha = 0
+        }, completion: { (finished: Bool) in
+            self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+        })
+    }
+
+    func getValidExtensionContext() -> NSExtensionContext? {
+        return extensionContext
     }
 }

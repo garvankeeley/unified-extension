@@ -21,6 +21,7 @@
 		EB0DABC2207BCC2900C68CB7 /* SnapKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0DABAE207BC18800C68CB7 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EB2EC41B207DCCB200C5E8E7 /* UXConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2EC41A207DCCB100C5E8E7 /* UXConstants.swift */; };
 		EB2EC41D207DCCB500C5E8E7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2EC41C207DCCB500C5E8E7 /* ShareViewController.swift */; };
+		EB2EC422207DD52800C5E8E7 /* SendToDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2EC421207DD52800C5E8E7 /* SendToDevice.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		EB0DABAE207BC18800C68CB7 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		EB2EC41A207DCCB100C5E8E7 /* UXConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UXConstants.swift; sourceTree = "<group>"; };
 		EB2EC41C207DCCB500C5E8E7 /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		EB2EC421207DD52800C5E8E7 /* SendToDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToDevice.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				EB2EC41A207DCCB100C5E8E7 /* UXConstants.swift */,
 				EB037CF5207559F600B3CD00 /* MainInterface.storyboard */,
 				EB037CF8207559F600B3CD00 /* Info.plist */,
+				EB2EC421207DD52800C5E8E7 /* SendToDevice.swift */,
 			);
 			path = theAppExtension;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 			files = (
 				EB2EC41D207DCCB500C5E8E7 /* ShareViewController.swift in Sources */,
 				EB2EC41B207DCCB200C5E8E7 /* UXConstants.swift in Sources */,
+				EB2EC422207DD52800C5E8E7 /* SendToDevice.swift in Sources */,
 				EB037CF4207559F600B3CD00 /* InitialViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
