@@ -1,67 +1,19 @@
 import UIKit
-import Social
 import SnapKit
 import MobileCoreServices
 
-fileprivate let topViewHeight = 365
-fileprivate let topViewWidth = 345
-fileprivate let pageInfoRowHeight = 64
-fileprivate let pageInfoRowLeftInset = 16
-fileprivate let actionRowHeight = 44
-fileprivate let rowInset = 8
-fileprivate var heightConstraint: Constraint!
-
-fileprivate weak var topLevelViewController: UIViewController?
-
-class EmbeddedNavController {
-    weak var parent: UIViewController?
-    var controllers = [UIViewController]()
-    var navigationController: UINavigationController
-
-    init (parent: UIViewController, rootViewController: UIViewController) {
-        self.parent = parent
-        navigationController = UINavigationController(rootViewController: rootViewController)
-
-        parent.addChildViewController(navigationController)
-        parent.view.addSubview(navigationController.view)
-
-        let width = min(UIScreen.main.bounds.width, CGFloat(topViewWidth))
-
-        navigationController.view.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.equalTo(width)
-            heightConstraint = make.height.equalTo(topViewHeight).constraint
-        }
-
-        navigationController.view.layer.cornerRadius = 8
-        navigationController.view.layer.masksToBounds = true
-    }
-
-    deinit {
-        navigationController.view.removeFromSuperview()
-        navigationController.removeFromParentViewController()
-    }
-}
-
-class ShareViewController: UIViewController {
-    var embedController: EmbeddedNavController!
-
-    override func viewDidLoad() {
-        topLevelViewController = self
-        assert(extensionContext != nil)
-
-        super.viewDidLoad()
-        let firstPage = ShareGeneralViewController()
-        embedController = EmbeddedNavController(parent: self, rootViewController: firstPage)
-
-        view.backgroundColor = UIColor(white: 0.0, alpha: 0.4)
-    }
-}
-
-class ShareGeneralViewController: UIViewController {
+class TopShareViewController: UIViewController {
     var separators = [UIView]()
     var actionRows = [UIView]()
     var stackView: UIStackView!
+
+    var validExtensionContext: NSExtensionContext?
+
+    override var extensionContext: NSExtensionContext? {
+        get {
+            return validExtensionContext
+        }
+    }
 
     var actions = [UIGestureRecognizer: (() -> Void)]()
 
@@ -97,15 +49,15 @@ class ShareGeneralViewController: UIViewController {
 
         pageTitleLabel.font = UIFont.boldSystemFont(ofSize: pageTitleLabel.font.pointSize)
         pageTitleLabel.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(rowInset)
-            make.left.equalToSuperview().inset(pageInfoRowLeftInset)
+            make.right.equalToSuperview().inset(UX.rowInset)
+            make.left.equalToSuperview().inset(UX.pageInfoRowLeftInset)
             make.bottom.equalTo(row.snp.centerY)
         }
 
         urlLabel.snp.makeConstraints {
             make in
-            make.right.equalToSuperview().inset(rowInset)
-            make.left.equalToSuperview().inset(pageInfoRowLeftInset)
+            make.right.equalToSuperview().inset(UX.rowInset)
+            make.left.equalToSuperview().inset(UX.pageInfoRowLeftInset)
             make.top.equalTo(pageTitleLabel.snp.bottom).offset(4)
         }
 
@@ -126,7 +78,7 @@ class ShareGeneralViewController: UIViewController {
         [icon, title].forEach { row.addSubview($0) }
 
         icon.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(rowInset)
+            make.left.equalToSuperview().inset(UX.rowInset)
             make.centerY.equalToSuperview()
             make.width.equalTo(34)
         }
@@ -142,7 +94,7 @@ class ShareGeneralViewController: UIViewController {
             navButton.contentMode = .scaleAspectFit
             row.addSubview(navButton)
             navButton.snp.makeConstraints { make in
-                make.right.equalToSuperview().inset(rowInset)
+                make.right.equalToSuperview().inset(UX.rowInset)
                 make.centerY.equalToSuperview()
                 make.width.height.equalTo(14)
             }
@@ -166,7 +118,10 @@ class ShareGeneralViewController: UIViewController {
     fileprivate func animateToActionDoneView(withTitle title: String = "") {
         navigationItem.leftBarButtonItem = nil
 
-        heightConstraint.update(offset: 200)
+        navigationController?.view.snp.updateConstraints {
+            make in
+            make.height.equalTo(200)
+        }
 
         UIView.animate(withDuration: 0.2, animations: {
             self.actionRows.forEach { $0.removeFromSuperview() }
@@ -177,10 +132,10 @@ class ShareGeneralViewController: UIViewController {
         })
     }
 
-    @objc func cancel() {
-       hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
-        topLevelViewController?.extensionContext?.cancelRequest(withError: NSError(domain: "cancel", code: 0, userInfo: nil))
-       })
+    @objc func finish() {
+        hideExtensionWithCompletionHandler { (Bool) -> Void in
+            self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+        }
     }
 
     func showActionDoneView(withTitle title: String) {
@@ -188,7 +143,7 @@ class ShareGeneralViewController: UIViewController {
         blue.backgroundColor = UIColor(red: 76 / 255.0, green: 158 / 255.0, blue: 1.0, alpha: 1.0)
         self.stackView.addArrangedSubview(blue)
         blue.snp.makeConstraints { make in
-            make.height.equalTo(pageInfoRowHeight)
+            make.height.equalTo(UX.pageInfoRowHeight)
         }
 
         let label = UILabel()
@@ -205,25 +160,25 @@ class ShareGeneralViewController: UIViewController {
 
         label.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.left.equalToSuperview().inset(pageInfoRowLeftInset)
+            make.left.equalToSuperview().inset(UX.pageInfoRowLeftInset)
             make.right.equalTo(checkmark.snp.left)
         }
 
         checkmark.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.right.equalToSuperview().inset(rowInset)
+            make.right.equalToSuperview().inset(UX.rowInset)
             make.width.equalTo(20)
             //make.width.height.equalTo(22)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            self.cancel()
+            self.finish()
         }
     }
 
     func hideExtensionWithCompletionHandler(completion: @escaping (Bool) -> Void) {
         UIView.animate(withDuration: 0.2, delay: 0.0, options: [], animations: {
-            topLevelViewController?.view.alpha = 0
+            self.view.superview?.alpha = 0
         }, completion: { (finished: Bool) in
             completion(finished)
         })
@@ -234,7 +189,7 @@ class ShareGeneralViewController: UIViewController {
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow") // hide separator line
         navigationItem.titleView = UIImageView(image: UIImage(named: "fxLogo"))
         navigationItem.titleView?.contentMode = .scaleAspectFit
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(finish))
     }
 
     private func setupStackView() {
@@ -287,15 +242,15 @@ class ShareGeneralViewController: UIViewController {
 
         actionRows.forEach {
             $0.snp.makeConstraints { make in
-                make.height.equalTo(actionRowHeight)
+                make.height.equalTo(UX.actionRowHeight)
             }
         }
 
         currentPageInfoRow.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(pageInfoRowHeight)
+            make.height.greaterThanOrEqualTo(UX.pageInfoRowHeight)
         }
 
-        if let item = extensionContext!.inputItems.first as? NSExtensionItem,
+        if let item = extensionContext?.inputItems.first as? NSExtensionItem,
             let itemProvider = item.attachments?.first as? NSItemProvider, itemProvider.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
             itemProvider.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { url, error in
                 DispatchQueue.main.sync {
@@ -316,12 +271,12 @@ class SubVC : UIViewController {
         navigationItem.title = "foo"
         navigationItem.backBarButtonItem = nil
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(ShareGeneralViewController.cancel))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Send", style: .plain, target: self, action: #selector(ShareGeneralViewController.cancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(TopShareViewController.finish))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Send", style: .plain, target: self, action: #selector(TopShareViewController.finish))
     }
 }
 
-extension ShareGeneralViewController {
+extension TopShareViewController {
 
     func actionOpenInFirefox() {
         animateToActionDoneView(withTitle: "Opening Firefox")
@@ -329,14 +284,28 @@ extension ShareGeneralViewController {
 
     func actionLoadInBackground() {
         animateToActionDoneView(withTitle: "Loading in Firefox")
+
+//        let profile = BrowserProfile(localName: "profile")
+//        profile.queue.addToQueue(item).uponQueue(.main) { _ in
+//            profile.shutdown()
+//            context.completeRequest(returningItems: [], completionHandler: nil)
+//        }
     }
 
     func actionBookmarkThisPage() {
         animateToActionDoneView(withTitle: "Bookmarked")
+
+//        let profile = BrowserProfile(localName: "profile")
+//        _ = profile.bookmarks.shareItem(item).value // Blocks until database has settled
+//        profile.shutdown()
     }
 
     func actionAddToReadingList() {
         animateToActionDoneView(withTitle: "Added to Reading List")
+
+//        let profile = BrowserProfile(localName: "profile")
+//        profile.readingList.createRecordWithURL(item.url, title: item.title ?? "", addedBy: UIDevice.current.name)
+//        profile.shutdown()
     }
 
     func actionSentToDevice() {

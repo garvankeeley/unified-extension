@@ -12,13 +12,15 @@
 		EB037CE12075598B00B3CD00 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB037CDF2075598B00B3CD00 /* Main.storyboard */; };
 		EB037CE32075598B00B3CD00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB037CE22075598B00B3CD00 /* Assets.xcassets */; };
 		EB037CE62075598B00B3CD00 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB037CE42075598B00B3CD00 /* LaunchScreen.storyboard */; };
-		EB037CF4207559F600B3CD00 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037CF3207559F600B3CD00 /* ShareViewController.swift */; };
+		EB037CF4207559F600B3CD00 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037CF3207559F600B3CD00 /* InitialViewController.swift */; };
 		EB037CF7207559F600B3CD00 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB037CF5207559F600B3CD00 /* MainInterface.storyboard */; };
 		EB037CFB207559F600B3CD00 /* theAppExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EB037CF1207559F600B3CD00 /* theAppExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EB0DABAF207BC18800C68CB7 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0DABAE207BC18800C68CB7 /* SnapKit.framework */; };
 		EB0DABB0207BC73400C68CB7 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0DABAE207BC18800C68CB7 /* SnapKit.framework */; };
 		EB0DABBE207BC90E00C68CB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB037CE22075598B00B3CD00 /* Assets.xcassets */; };
 		EB0DABC2207BCC2900C68CB7 /* SnapKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0DABAE207BC18800C68CB7 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EB2EC41B207DCCB200C5E8E7 /* UXConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2EC41A207DCCB100C5E8E7 /* UXConstants.swift */; };
+		EB2EC41D207DCCB500C5E8E7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2EC41C207DCCB500C5E8E7 /* ShareViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,10 +66,12 @@
 		EB037CE52075598B00B3CD00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EB037CE72075598B00B3CD00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB037CF1207559F600B3CD00 /* theAppExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = theAppExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		EB037CF3207559F600B3CD00 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		EB037CF3207559F600B3CD00 /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		EB037CF6207559F600B3CD00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		EB037CF8207559F600B3CD00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB0DABAE207BC18800C68CB7 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
+		EB2EC41A207DCCB100C5E8E7 /* UXConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UXConstants.swift; sourceTree = "<group>"; };
+		EB2EC41C207DCCB500C5E8E7 /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +129,9 @@
 		EB037CF2207559F600B3CD00 /* theAppExtension */ = {
 			isa = PBXGroup;
 			children = (
-				EB037CF3207559F600B3CD00 /* ShareViewController.swift */,
+				EB037CF3207559F600B3CD00 /* InitialViewController.swift */,
+				EB2EC41C207DCCB500C5E8E7 /* ShareViewController.swift */,
+				EB2EC41A207DCCB100C5E8E7 /* UXConstants.swift */,
 				EB037CF5207559F600B3CD00 /* MainInterface.storyboard */,
 				EB037CF8207559F600B3CD00 /* Info.plist */,
 			);
@@ -247,7 +253,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB037CF4207559F600B3CD00 /* ShareViewController.swift in Sources */,
+				EB2EC41D207DCCB500C5E8E7 /* ShareViewController.swift in Sources */,
+				EB2EC41B207DCCB200C5E8E7 /* UXConstants.swift in Sources */,
+				EB037CF4207559F600B3CD00 /* InitialViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
